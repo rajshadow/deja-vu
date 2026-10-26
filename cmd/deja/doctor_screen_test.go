@@ -1,6 +1,7 @@
 package main
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -83,6 +84,23 @@ func TestDoctorScreenAllKeepsEveryRow(t *testing.T) {
 	}
 	if strings.Contains(got, "more agent") {
 		t.Errorf("--all printed a fold line:\n%s", got)
+	}
+}
+
+func TestDoctorScreenShowsMcodeGuidanceAfterInstall(t *testing.T) {
+	hermeticEnv(t)
+	exe := filepath.Join(t.TempDir(), "deja")
+	if _, err := installMcodeAuto(exe, false); err != nil {
+		t.Fatalf("install: %v", err)
+	}
+
+	var text strings.Builder
+	doctorMCP(&text)
+	report := doctorReport{MCP: collectDoctorMCP()}
+	got := doctorScreen(text.String(), report, false, false, 0)
+	row := harnessRow(t, got, "mcode")
+	if !strings.Contains(row, "guidance written") {
+		t.Errorf("mcode row should report guidance written, got: %s", row)
 	}
 }
 

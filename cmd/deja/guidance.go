@@ -755,6 +755,8 @@ func ownGuidanceFile(harness string) string {
 		// Inside the plugin package, which is how Reasonix loads a skill a
 		// package ships: listed as /deja:deja-history under /skills.
 		return reasonixSkillPath()
+	case "mcode":
+		return mcodeSkillPath()
 	case "windsurf":
 		// Written by installWindsurf, beside the block in global_rules.md.
 		return windsurfSkillPath()

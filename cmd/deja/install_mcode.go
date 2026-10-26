@@ -38,6 +38,11 @@ func mcodePluginRoot() string {
 	return filepath.Join(sources.McodeConfigHome(), "plugins", "deja")
 }
 
+// mcodeSkillPath returns the path where deja installs SKILL.md for MiniMax Code.
+func mcodeSkillPath() string {
+	return filepath.Join(mcodePluginRoot(), "skills", "deja-history", "SKILL.md")
+}
+
 // installMcode writes deja's MCP server into MCode's configuration.
 func installMcode(exe string, uninstall bool) (installResult, error) {
 	// The command as MiniMax Code's own MCP page writes it: the binary's
@@ -221,7 +226,7 @@ func installMcodePlugin(exe string, uninstall bool) (installResult, error) {
 		// The skill, inside the package: the runtime loads a package's skills
 		// from the manifest, and the directory name has to match the name in
 		// the frontmatter.
-		{filepath.Join(root, "skills", "deja-history", "SKILL.md"), []byte(skillFile(guidanceBody))},
+		{mcodeSkillPath(), []byte(skillFile(guidanceBody))},
 	}
 	// Whether the package was there before this run: the report says
 	// "created" for a package that is not there yet and "updated" for one

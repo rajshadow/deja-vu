@@ -13,6 +13,30 @@ import (
 	"github.com/vshulcz/deja-vu/internal/sources"
 )
 
+// Both mcode and mcode-auto should report guidance as missing before installation
+// and written after installation.
+func TestGuidanceStatusSeesTheMcodeSkill(t *testing.T) {
+	hermeticEnv(t)
+	harnesses := []string{"mcode", "mcode-auto"}
+
+	for _, harness := range harnesses {
+		if status := guidanceStatus(harness); status != "missing" {
+			t.Errorf("%s before install: guidance %q, want missing", harness, status)
+		}
+	}
+
+	exe := filepath.Join(t.TempDir(), "deja")
+	if _, err := installMcodeAuto(exe, false); err != nil {
+		t.Fatalf("install: %v", err)
+	}
+
+	for _, harness := range harnesses {
+		if status := guidanceStatus(harness); status != "written" {
+			t.Errorf("%s after install: guidance %q, want written", harness, status)
+		}
+	}
+}
+
 // The package MCode loads: a manifest, the hook document, and the icon the
 // manifest names. The hook document is the part that matters — the events it
 // answers, and the hook each one runs.
